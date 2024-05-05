@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stopwatch Tutorial</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    />
+  </head>
+  <body>
+    <article class="stopwatch">
+      <div id="display">00:00:00:000</div>
+      <div id="buttons">
+        <button id="startStopBtn">Start</button>
+        <button id="resetBtn">Reset</button>
+      </div>
+    </article>
+
+    <script>
+      let timer;
+      let isRunning = false;
+      let milliseconds = 0;
+      let seconds = 0;
+      let minutes = 0;
+      let hours = 0;
+
+      function startStop() {
+        if (!isRunning) {
+          timer = setInterval(updateTime, 33);
+          document.getElementById("startStopBtn").textContent = "Stop";
+        } else {
+          clearInterval(timer);
+          document.getElementById("startStopBtn").textContent = "Start";
+        }
+        isRunning = !isRunning;
+      }
+
+      function reset() {
+        clearInterval(timer);
+        document.getElementById("display").textContent = "00:00:00:000";
+        isRunning = false;
+        seconds = 0;
+        minutes = 0;
+        hours = 0;
+        document.getElementById("startStopBtn").textContent = "Start";
+      }
+
+      function updateTime() {
+        milliseconds += 33;
+        if (milliseconds >= 1000) {
+          seconds++;
+          milliseconds -= 1000;
+        }
+        if (seconds === 60) {
+          seconds = 0;
+          minutes++;
+          if (minutes === 60) {
+            minutes = 0;
+            hours++;
+          }
+        }
+        document.getElementById("display").textContent =
+          formatTime(hours) +
+          ":" +
+          formatTime(minutes) +
+          ":" +
+          formatTime(seconds) +
+          ":" +
+          formatTime(milliseconds);
+      }
+
+      function formatTime(time) {
+        return time < 10 ? "0" + time : time;
+      }
+
+      document
+        .getElementById("startStopBtn")
+        .addEventListener("click", startStop);
+      document.getElementById("resetBtn").addEventListener("click", reset);
+    </script>
+  </body>
+</html>
+<style>
+  body {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(90deg, #3F2B96 0%, #A8C0FF 100%);
+  }
+  .stopwatch {
+    width: 60%;
+  }
+
+  #display {
+    width: 100%;
+    font-size: 2rem;
+    font-weight: bold;
+    padding: 10px;
+    border: 2px solid #333;
+    border-radius: 10px;
+    background-color: #f8f8f8;
+    margin-bottom: 20px;
+  }
+
+  #buttons{
+    justify-content: space-around;
+    display: flex;
+  }
+</style>
